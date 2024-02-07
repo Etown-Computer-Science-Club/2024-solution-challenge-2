@@ -1,7 +1,8 @@
 import { useState } from "react";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { db } from "./firebaseconfig";
 import { collection, addDoc, getDocs } from "firebase/firestore";
+import './App.css';
 
 function App() {
   const [foodItem, setFoodItem] = useState("");
@@ -41,34 +42,40 @@ function App() {
     }
   }
 
-useEffect(() => {
-	getfoods().then((foods) => setFoodList(foods))
-}, [])
+  useEffect(() => {
+    getfoods().then((foods) => setFoodList(foods));
+  }, []);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Food Item:
-          <input
-            type="text"
-            value={foodItem}
-            onChange={(e) => setFoodItem(e.target.value)}
-          />
-        </label>
-        <label>
-          Date:
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </label>
-        <button type="submit">Add to Database</button>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <form onSubmit={handleSubmit} className="w-full max-w-xs flex flex-col items-center gap-4">
+        <div>
+          <label className="block">
+            Food Item:
+            <input
+              type="text"
+              value={foodItem}
+              onChange={(e) => setFoodItem(e.target.value)}
+              className="mt-1 block w-full"
+            />
+          </label>
+        </div>
+        <div>
+          <label className="block">
+            Date:
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="mt-1 block w-full"
+            />
+          </label>
+        </div>
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Add to Database</button>
       </form>
 
-      <div>
-        <h2>Food List</h2>
+      <div className="mt-8">
+        <h2 className="text-center">Food List</h2>
         <ul>
           {foodList.map((item) => (
             <li key={item.id}>
