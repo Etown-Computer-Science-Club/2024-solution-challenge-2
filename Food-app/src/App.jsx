@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { db } from "./firebaseconfig";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import './App.css';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import RecipesPage from './components/RecipesPage'; 
 
 function App() {
   const [foodItem, setFoodItem] = useState("");
@@ -47,7 +48,15 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <BrowserRouter>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <nav>
+          <Link to="/recipes" className="px-4 py-2 bg-green-500 text-white rounded my-4">Get Recipes</Link>
+        </nav>
+        
+        <Routes>
+          <Route path="/" element={
+            <>
       <form onSubmit={handleSubmit} className="w-full max-w-xs flex flex-col items-center gap-4">
         <div>
           <label className="block">
@@ -84,7 +93,12 @@ function App() {
           ))}
         </ul>
       </div>
+      </>
+          } />
+          <Route path="/recipes" element={<RecipesPage foodList={foodList} />} />
+        </Routes>
     </div>
+    </BrowserRouter>
   );
 }
 
