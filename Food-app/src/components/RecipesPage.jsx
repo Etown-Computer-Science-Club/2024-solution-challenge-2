@@ -1,7 +1,7 @@
 // RecipesPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import spoonAPI from '../apiconfig.js'; // Update this path to where your apiconfig.js is located
+//import spoonAPI from '../apiconfig.js'; // Update this path to where your apiconfig.js is located
 
 function RecipesPage({ foodList }) {
   const [recipes, setRecipes] = useState([]);
@@ -14,7 +14,7 @@ function RecipesPage({ foodList }) {
           params: {
             ingredients: ingredients,
             number: 10,
-            apiKey: spoonAPI // Use the imported API key here
+           // apiKey: spoonAPI // Use the imported API key here
           }
         });
         setRecipes(response.data);

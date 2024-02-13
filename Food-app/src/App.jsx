@@ -4,7 +4,9 @@ import { db } from "./firebaseconfig";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import RecipesPage from './components/RecipesPage';
+import RecipesPage from './components/RecipesPage'; 
+import { DeleteTwoTone } from '@ant-design/icons';
+import {Button } from 'antd';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -94,20 +96,19 @@ function App() {
               <button type="submit">Add to Database</button>
             </form>
 
-            <div className="food-list">
-              <h2>Food List</h2>
-              <ul>
-                {foodList.map(({ id, foodItem, date }) => (
-                  <li key={id}>{foodItem} - {date}</li>
-                ))}
-              </ul>
-            </div>
-          </>
-        ) : (
-          <button onClick={handleSignIn}>Sign in with Google</button>
-        )}
-
-        <Routes>
+      <div className="mt-8">
+  <h2 className="text-center">Food List</h2>
+  <ul>
+    {foodList.map((item) => (
+      <li key={item.id}>
+        <Button type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
+        {item.foodItem} - {item.date}
+      </li>
+    ))}
+  </ul>
+</div>
+      </>
+          } />
           <Route path="/recipes" element={<RecipesPage foodList={foodList} />} />
         </Routes>
       </div>
