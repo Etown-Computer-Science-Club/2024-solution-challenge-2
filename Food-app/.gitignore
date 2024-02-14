@@ -26,3 +26,4 @@ dist-ssr
 # api keys
 
 src/apiconfig.js
+.env

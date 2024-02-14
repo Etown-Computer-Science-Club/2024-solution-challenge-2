@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import { db } from "./firebaseconfig";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from "firebase/firestore";
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import RecipesPage from './components/RecipesPage'; 
+import RecipesPage from './components/RecipesPage';
 import { DeleteTwoTone } from '@ant-design/icons';
-import {Button } from 'antd';
+import { Button } from 'antd';
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,14 +17,11 @@ function App() {
   const auth = getAuth();
 
   useEffect(() => {
-    // Listen for auth state changes
     onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Fetch foods when user is signed in
         fetchFoods(currentUser.uid);
       } else {
-        // Clear food list when signed out
         setFoodList([]);
       }
     });
@@ -48,13 +46,13 @@ function App() {
 
     try {
       await addDoc(collection(db, "foods"), {
-        userId: user.uid, // Associate food item with user ID
+        userId: user.uid,
         foodItem,
         date,
       });
       setFoodItem("");
       setDate("");
-      fetchFoods(user.uid); // Refresh the list of food items
+      fetchFoods(user.uid);
     } catch (error) {
       console.error("Error adding food item: ", error);
     }
@@ -68,6 +66,15 @@ function App() {
       ...doc.data()
     }));
     setFoodList(items);
+  };
+
+  const handleDelete = async (itemId) => {
+    try {
+      await deleteDoc(doc(db, "foods", itemId));
+      setFoodList(foodList.filter(item => item.id !== itemId));
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
   };
 
   return (
@@ -96,19 +103,23 @@ function App() {
               <button type="submit">Add to Database</button>
             </form>
 
-      <div className="mt-8">
-  <h2 className="text-center">Food List</h2>
-  <ul>
-    {foodList.map((item) => (
-      <li key={item.id}>
-        <Button type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
-        {item.foodItem} - {item.date}
-      </li>
-    ))}
-  </ul>
-</div>
-      </>
-          } />
+            <div className="mt-8">
+              <h2 className="text-center">Food List</h2>
+              <ul>
+                {foodList.map((item) => (
+                  <li key={item.id}>
+                    <Button onClick={() => handleDelete(item.id)} type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
+                    {item.foodItem} - {item.date}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <button onClick={handleSignIn}>Sign in with Google</button>
+        )}
+
+        <Routes>
           <Route path="/recipes" element={<RecipesPage foodList={foodList} />} />
         </Routes>
       </div>
