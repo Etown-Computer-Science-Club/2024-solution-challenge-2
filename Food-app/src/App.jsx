@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "./firebaseconfig";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
 import './App.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import RecipesPage from './components/RecipesPage'; 
@@ -44,7 +44,14 @@ function App() {
       return [];
     }
   }
+  async function deleteFood(id) {
+    const collectionRef = collection(db, "foods");
+    const docRef = doc(collectionRef, id);
+    await deleteDoc(docRef);
 
+    const newFoodList = foodList.filter(x => x.id != id);
+    setFoodList(newFoodList);
+  }
   useEffect(() => {
     getfoods().then((foods) => setFoodList(foods));
   }, []);
@@ -84,13 +91,14 @@ function App() {
         </div>
         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Add to Database</button>
       </form>
+       
 
       <div className="mt-8">
   <h2 className="text-center">Food List</h2>
   <ul>
     {foodList.map((item) => (
       <li key={item.id}>
-        <Button type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
+        <Button onClick = {() => deleteFood(item.id)}type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
         {item.foodItem} - {item.date}
       </li>
     ))}
