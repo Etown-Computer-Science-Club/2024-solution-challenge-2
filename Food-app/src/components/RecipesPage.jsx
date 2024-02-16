@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import spoonAPI from '../apiconfig.js'; // Update this path to where your apiconfig.js is located
 
-function RecipesPage({ foodList }) {
+function RecipesPage({ foodList, selectedFoodItem}) {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
