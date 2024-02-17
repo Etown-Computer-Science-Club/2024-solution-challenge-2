@@ -3,10 +3,10 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signO
 import { db } from "./firebaseconfig";
 import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from "firebase/firestore";
 import './App.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import RecipesPage from './components/RecipesPage';
 import { DeleteTwoTone } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 
 
 function App() {
@@ -16,9 +16,11 @@ function App() {
   const [foodItem, setFoodItem] = useState("");
   const [foodList, setFoodList] = useState([]);
   const [date, setDate] = useState("");
+  const [selectedFoodItem, setSelectedFoodItem] = useState(null);
   const auth = getAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('signIn'); // 'signIn' or 'signUp'
+  
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -110,6 +112,15 @@ function App() {
     }
   };
 
+  const handleUseForRecipe = (item) => {
+    setSelectedFoodItem(item);
+  };
+
+  const handleMakeRecipe = () => {
+    console.log("Making recipe with food item:", selectedFoodItem);
+    setSelectedFoodItem(null); 
+  };
+
   return (
   <BrowserRouter>
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -141,6 +152,7 @@ function App() {
                 <li key={item.id}>
                   <Button onClick={() => handleDelete(item.id)} type="link" danger icon={<DeleteTwoTone twoToneColor="#ff4d4f" />} />
                   {item.foodItem} - {item.date}
+                  <Button onClick={() => handleUseForRecipe(item)}>Use for Recipe</Button> 
                 </li>
               ))}
             </ul>
@@ -199,6 +211,8 @@ function App() {
       <Routes>
         <Route path="/recipes" element={<RecipesPage foodList={foodList} />} />
       </Routes>
+      
+      
     </div>
   </BrowserRouter>
 );
