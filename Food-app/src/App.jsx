@@ -1,12 +1,13 @@
+// app built with react
 import React, { useState, useEffect } from "react";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { db } from "./firebaseconfig";
 import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from "firebase/firestore";
 import './App.css';
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import RecipesPage from './components/RecipesPage';
 import { DeleteTwoTone } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
+import { Button } from 'antd';
 
 
 function App() {
@@ -46,11 +47,11 @@ function App() {
       .then((userCredential) => {
         // Signed in 
         setIsModalOpen(false); // Close the modal on successful sign-in
-        // Set user state here if needed
+        
       })
       .catch((error) => {
         console.error("Error signing in with email: ", error.message);
-        // Optionally handle errors here
+        
       });
   };
   
@@ -61,11 +62,11 @@ function App() {
       .then((userCredential) => {
         // Signed up 
         setIsModalOpen(false); // Close the modal on successful sign-up
-        // You might want to automatically sign the user in here as well
+        
       })
       .catch((error) => {
         console.error("Error signing up: ", error.message);
-        // Optionally handle errors here
+        
       });
   };
 

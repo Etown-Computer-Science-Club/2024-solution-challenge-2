@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import spoonAPI from '../apiconfig.js';
 
+// we utilized open source spoon api to get the recipes for the food items
 function RecipesPage({ foodList }) {
 	const [recipes, setRecipes] = useState([]);
 
@@ -24,7 +25,6 @@ function RecipesPage({ foodList }) {
 				setRecipes(response.data);
 			} catch (error) {
 				console.error('Error fetching recipes:', error);
-				// Optionally handle the error, e.g., by setting an error state
 			}
 		};
 
